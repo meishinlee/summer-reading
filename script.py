@@ -12,6 +12,7 @@ from queue import PriorityQueue as pq
 import editdistance
 from nltk.corpus import words
 import cohere
+import streamlit as st 
 
 adv_reads = pd.read_csv('google_books_1299.csv')
 adv_reads.drop(columns=adv_reads.columns[0], axis=1, inplace=True)
@@ -43,7 +44,7 @@ for ind in child_books.index:
 child_books['lower_age'] = lower_age
 child_books['upper_age'] = upper_age
 
-child_stories = pd.read_csv('children_stories.Csv')
+child_stories = pd.read_csv('children_stories.Csv', encoding="ISO-8859-1")
 child_stories.drop_duplicates(keep='first', inplace=True, ignore_index=True)
 story_upper = []
 story_lower = []
@@ -137,7 +138,17 @@ adv_reads['title_desc_filtered']=adv_reads['title_desc'].apply(join_text)
 # Remove punctuation for clarity 
 df_combined['title_desc_filtered'] = df_combined['title_desc_filtered'].str.replace(r'[^\w\s]+', '')
 
-user_age = 17
+st.write(
+    '''
+    # Summer Reading made fun! 
+    '''
+)
+st.write(
+    '''
+    ## Enjoy reading a book based on your current interests! 
+    '''
+)
+user_age = st.number_input("Select your age", 15)
 
 user_age = int(user_age)
 if int(user_age) >= 16: 
@@ -150,7 +161,7 @@ vectorizer = TfidfVectorizer(max_features=1800, lowercase=True, stop_words='engl
 tf_idf_output = vectorizer.fit_transform(df_filter['title_desc_filtered'])
 vocab = np.array(vectorizer.get_feature_names())
 
-num_topics=25
+num_topics=25 # can be changed for fine-tuning
 
 # Perform LDA 
 num_topics = int(num_topics) # can be changed 
@@ -168,7 +179,8 @@ def display_topics(model, feature_names, no_top_words):
 
 display_topics(lda, vocab, num_top_words)
 
-user_phrase="small town murder that results in a court case from the victim"
+user_phrase = st.text_input("Enter some words that describe what you want to read", "small town murder that results in an investigation case reported from the victim")
+# user_phrase="small town murder that results in an investigation case reported from the victim"
 
 # word correct
 nltk.download('words')
@@ -216,7 +228,7 @@ for group in topics_set:
         best_topic = group
         best_intersection = len(user_phrase.intersection(group))
 
-print(best_topic, best_intersection) # returns best list of topics and length of the intersection 
+# print(best_topic, best_intersection) # returns best list of topics and length of the intersection 
 
 # Now we need to match the book descriptions to the topic that was chosen 
 books = pq() #min heap 
@@ -224,17 +236,42 @@ for index, row in df_filter.iterrows():
     # print(row['title_desc_filtered'])
     intersect_len = len(set(row['title_desc_filtered'].split()).intersection(best_topic))
     # print(set(row['title_desc_filtered'].split()))
-    books.put((-1*intersect_len, row['title'].strip(string.punctuation), row['author'].strip(string.punctuation), row['Type'].strip(string.punctuation)))
+    # if pd.isna(row['author']): 
+    #     books.put(books.put((-1*intersect_len, row['title'].strip(string.punctuation), "None", row['Type'].strip(string.punctuation))))
+    # else: 
+    books.put((-1*intersect_len, row['title'], row['author'], row['Type']))
 
 num_recs=5
 
-books_hm = {}
-while len(books_hm) < 5: 
+books_title = []
+books_author = []
+books_type = []
+while len(set(books_title)) < 5: 
     book = books.get()
     # print(book[0])
-    books_hm[book[1]] = (book[2], book[3])
+    if book[1] not in books_title: 
+        books_title.append(book[1])
+        books_author.append(book[2])
+        books_type.append(book[3])
 
-theme='crime, murder, new york city, suspect, man, FBI, detective'
+book_recs_df = pd.DataFrame()
+book_recs_df['Title'] = books_title
+book_recs_df['Author'] = books_author
+book_recs_df['Type'] = books_type
+
+st.write(
+    '''
+    # Your recommendations are: 
+    '''
+)
+
+st.table(book_recs_df)
+
+st.write("# Didn't find a book that suits your taste? How about writing one yourself?")
+st.write("## Generate an idea here!")
+theme = st.text_input("Enter some keywords that describe what you want to write about", "machine learning is complex, yet fascinating")
+
+#'crime, murder, new york city, suspect, man, FBI, detective'
 
 import cohere
 co = cohere.Client('KTQmgyEWSk81jeyS98xCMB1iRuWjZ5KDzSkrdw0b')
@@ -250,5 +287,5 @@ prediction = co.generate(
   stop_sequences=["--"],
   return_likelihoods='NONE')
 print('Idea: {}...'.format(prediction.generations[0].text))
-
+st.write("Sample Storyline: ",str(prediction.generations[0].text) + str("..."))
 
