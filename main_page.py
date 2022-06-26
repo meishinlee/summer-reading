@@ -261,7 +261,7 @@ def for_main():
     st.table(book_recs_df)
 
 def send_sms(idea, number): 
-    phone_num = "".join(number.split("-"))
+    # phone_num = "".join(number.split("-"))
     account_sid = 'AC10d95cbc904be6f7f854a20da39496ec' 
     auth_token = 'b7b13b9326b3a9689c53d3a87521bcf5' 
     client = Client(account_sid, auth_token) 
@@ -270,7 +270,7 @@ def send_sms(idea, number):
     message = client.messages.create(  
                                     messaging_service_sid='MG92509adabb70c0340dc5196debb415a4', 
                                     body= msg_body,      
-                                    to= phone_num
+                                    to= number
                                 ) 
         
     if message.sid: 
@@ -305,7 +305,7 @@ def run_page_two():
     st.write("Sample Storyline: ", idea + str("..."))
 
     st.write("### Love the idea? Send yourself a SMS so you won't forget!")
-    number = st.text_input("Enter phone number for recommendations", '000-000-0000')
+    number = st.text_input("Enter phone number for recommendations", '0000000000')
     if st.button('Send me a text message!'):
         send_sms(st.session_state.curr_idea, number)
         st.session_state.curr_idea = idea
