@@ -310,6 +310,16 @@ def run_page_two():
         st.session_state.curr_idea = idea
         pass
 
+def run_page_three(): 
+
+    st.write("### Cost of Reading 📖")
+    st.write("### Do you want to know how much carbon footprint📔 you can reduce by switching to ebooks")
+
+    num_books = st.slider("Enter no of books you want to read", 0, 100)
+
+    st.write("If you switch to ebooks you will be reducing", int(num_books)*2.7, "kgs of GHG emissions")
+    
+
 def main_page():
     # st.sidebar.markdown("# Find a book 📕")
     st.sidebar.markdown("# Summer reading made fun for students and young adults 📕")
@@ -322,13 +332,14 @@ def page2():
     run_page_two()
 
 def page3():
-    st.markdown('# Randomizer 📖')
-    st.sidebar.markdown('# Randomizer 📖')
+    st.markdown('# Sustainable reading📖')
+    st.sidebar.markdown('# Sustainable reading 📖')
+    run_page_three()
 
 page_names_to_funcs = {
     "Book Recommendations": main_page,
-    "Ideation and Story Generation": page2
-    # "Page 3": page3,
+    "Ideation and Story Generation": page2,
+    "Sustainable reading" : page3
 }
 
 # st.markdown("# Summer Reading Made Fun")
