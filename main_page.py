@@ -290,7 +290,7 @@ def run_page_two():
     model='large',
     prompt='--\nProduct: Book \nKeywords: ' + str(theme) + str('Exciting Book Description:'),
     max_tokens=75,
-    temperature=0.9,
+    temperature=0.8,
     k=0,
     p=1,
     frequency_penalty=0,
