@@ -130,17 +130,12 @@ def for_main():
 
     st.write(
         '''
-        # Summer Reading made fun! 
-        '''
-    )
-    st.write(
-        '''
-        ### Enjoy reading a book based on your current interests! 
+        ### Enjoy reading a book📘, or multiple books📚 this summer🌞! Enter some words or phrases that describe the storyline of your book and we'll give you some recommendations🙂!
         '''
     )
     # with st.form(key = "age"):
     user_age = st.number_input("Select your age", 17)
-    user_phrase = st.text_input("Enter some words that describe what you want to read", "fun happy festive diary secret")
+    user_phrase = st.text_input("Enter some words that describe what you want to read", "war in city causing distruction of all archetecture")
     # user_phrase="small town murder that results in an investigation case reported from the victim" 17
         # submit_button = st.form_submit_button(label="Submit")
 
@@ -155,11 +150,12 @@ def for_main():
     tf_idf_output = vectorizer.fit_transform(df_filter['title_desc_filtered'])
     vocab = np.array(vectorizer.get_feature_names())
 
-    num_topics= 20 # can be changed for fine-tuning
+    num_topics= 25 # can be changed for fine-tuning
 
     # Perform LDA 
     num_topics = int(num_topics) # can be changed 
     lda = LatentDirichletAllocation(n_components=num_topics, random_state=1).fit(tf_idf_output)
+    # rs set to 1 for testing purposes
 
     num_top_words=15
 
@@ -196,7 +192,8 @@ def for_main():
             new_phrase_list.append(elem)
 
     user_phrase = " ".join(new_phrase_list)
-    st.write("Autocorrected Phrase:",user_phrase)
+    # st.markdown("Autocorrected Phrase:", user_phrase)
+    st.write(" #### Autocorrected Phrase:",user_phrase)
 
     # There is no point of removing stopwords here because we are seeing how much similarity there is regardless. 
     # I am thinking of adding spell-correction here? 
@@ -264,6 +261,7 @@ def for_main():
     st.table(book_recs_df)
 
 def send_sms(idea, number): 
+    phone_num = "".join(number.split("-"))
     account_sid = 'AC10d95cbc904be6f7f854a20da39496ec' 
     auth_token = 'b7b13b9326b3a9689c53d3a87521bcf5' 
     client = Client(account_sid, auth_token) 
@@ -272,7 +270,7 @@ def send_sms(idea, number):
     message = client.messages.create(  
                                     messaging_service_sid='MG92509adabb70c0340dc5196debb415a4', 
                                     body= msg_body,      
-                                    to= number
+                                    to= phone_num
                                 ) 
         
     if message.sid: 
@@ -281,11 +279,10 @@ def send_sms(idea, number):
 # @st.cache(suppress_st_warning=True)
 def run_page_two(): 
 
-    st.write("# Didn't find a book that suits your taste? How about writing one yourself?")
-    st.write("## Generate an idea here!")
-
+    st.write("### Didn't find a book that suits your taste? How about writing one yourself?✨")
+    st.write("### Generate an idea here!🌠")
         
-    theme = st.text_input("Enter some keywords that describe what you want to write about", "a girl is going to be eaten by a werewolf")
+    theme = st.text_input("Enter some keywords that describe what you want to write about", "a true crime story that takes place in new york city. the victim, FBI, and detectives team up.")
     #'crime, murder, new york city, suspect, man, FBI, detective'
     import cohere
     co = cohere.Client('KTQmgyEWSk81jeyS98xCMB1iRuWjZ5KDzSkrdw0b')
@@ -307,9 +304,8 @@ def run_page_two():
     
     st.write("Sample Storyline: ", idea + str("..."))
 
-    st.write("# Do you want to get the idea generated an SMS")
-    st.write("## Generate an a idea recommendation SMS here!")
-    number = st.text_input("Enter phone number for recommendations", '000')
+    st.write("### Love the idea? Send yourself a SMS so you won't forget!")
+    number = st.text_input("Enter phone number for recommendations", '000-000-0000')
     if st.button('Send me a text message!'):
         send_sms(st.session_state.curr_idea, number)
         st.session_state.curr_idea = idea
@@ -318,27 +314,27 @@ def run_page_two():
         pass
 
 def main_page():
-    st.markdown("# Main page 🎈")
-    st.sidebar.markdown("# Main page 🎈")
+    # st.sidebar.markdown("# Find a book 📕")
+    st.sidebar.markdown("# Summer reading made fun for students and young adults 📕")
     for_main()
 
 def page2():
-    st.markdown("# Page 2 ❄️")
-    st.sidebar.markdown("# Page 2 ❄️")
+    st.markdown("# Ideation 📝")
+    st.sidebar.markdown("# Ideation 📝")
+    st.sidebar.markdown("# This is where fun stories and wacky ideas come to life🎉")
     run_page_two()
-    # st.write("# On page 2")
 
 def page3():
-    st.markdown("# Page 3 🎉")
-    st.sidebar.markdown("# Page 3 🎉")
+    st.markdown('# Randomizer 📖')
+    st.sidebar.markdown('# Randomizer 📖')
 
 page_names_to_funcs = {
-    "Main Page": main_page,
-    "Page 2": page2,
-    "Page 3": page3,
+    "Book Recommendations": main_page,
+    "Ideation and Story Generation": page2
+    # "Page 3": page3,
 }
 
-st.markdown("# Summer Reading Made Fun")
+# st.markdown("# Summer Reading Made Fun")
 
 selected_page = st.sidebar.selectbox("Select a page", page_names_to_funcs.keys())
 page_names_to_funcs[selected_page]()
