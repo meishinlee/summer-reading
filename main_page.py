@@ -261,7 +261,7 @@ def for_main():
     st.table(book_recs_df)
 
 def send_sms(idea, number): 
-    client = Client(account_sid, auth_token) 
+    client = Client(st.secrets['account_sid'], st.secrets['auth_token']) 
     
     msg_body = 'Here\'s your idea:' + str(idea) + "\nNow it's time for you to write your heart out!"
     message = client.messages.create(  
