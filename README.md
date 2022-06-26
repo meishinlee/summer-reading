@@ -3,7 +3,7 @@
 
 ## 🧩How can you try our Project
 
-- You can either use the [link](!https://meishinlee-summer-reading-main-page-6v5a2l.streamlitapp.com/) or 
+- You can either use the [link](https://meishinlee-summer-reading-main-page-6v5a2l.streamlitapp.com/) or 
 - you can try it on your system
 
 ### 💻 How to run it on your system
@@ -50,5 +50,5 @@ We plan to optimize our recommendation algorithm even further and collect more d
 
 ## Demo
 
-[Try it out!!](!https://meishinlee-summer-reading-main-page-6v5a2l.streamlitapp.com/)
+[Try it out!!](https://meishinlee-summer-reading-main-page-6v5a2l.streamlitapp.com/)
 
