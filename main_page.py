@@ -312,8 +312,8 @@ def run_page_two():
 
 def run_page_three(): 
 
-    st.write("### Cost of Reading 📖")
-    st.write("### Do you want to know how much carbon footprint👣 you can reduce by making a simple decision of opting for ebooks and audio books, borrowing from libraries, and sharing books.")
+    #st.write("### Cost of Reading 📖")
+    st.write("### Do you want to know how much of your carbon footprint👣 you can reduce by opting for ebooks or audio books.")
 
     num_books = st.slider("Enter no of books you want to read", 0, 100)
 
