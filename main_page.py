@@ -282,7 +282,7 @@ def run_page_two():
     theme = st.text_input("Enter some keywords that describe what you want to write about", "a true crime story that takes place in new york city. the victim, FBI, and detectives team up.")
     #'crime, murder, new york city, suspect, man, FBI, detective'
     import cohere
-    co = cohere.Client(cohere_auth)
+    co = cohere.Client(st.secrets['cohere_auth'])
     prediction = co.generate(
     model='large',
     prompt='--\nProduct: Book \nKeywords: ' + str(theme) + str('Exciting Book Description:'),
