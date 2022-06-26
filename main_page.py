@@ -263,7 +263,7 @@ def for_main():
 def send_sms(idea, number): 
     client = Client(st.secrets['account_sid'], st.secrets['auth_token']) 
     
-    msg_body = 'Here\'s your idea:' + str(idea) + "\nNow it's time for you to write your heart out!"
+    msg_body = 'Here\'s your idea:' + str(idea) + str("...") + "\nNow it's time for you to write your heart out!"
     message = client.messages.create(  
                                      messaging_service_sid = st.secrets['messaging_service_sid'], 
                                     body= msg_body,      
