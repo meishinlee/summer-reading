@@ -3,3 +3,7 @@ bs4
 editdistance
 cohere
 twilio
+nltk
+streamlit
+pandas
+scikit-learn
